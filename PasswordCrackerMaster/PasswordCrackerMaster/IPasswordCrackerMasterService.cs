@@ -12,7 +12,7 @@ namespace PasswordCrackerMaster
     public interface IPasswordCrackerMasterService
     {
         [OperationContract]
-        List<string> GetWords();
+        IEnumerable<string> GetWords();
 
         [OperationContract]
         void SendResult(List<Result>results);

@@ -12,11 +12,11 @@ namespace PasswordCrackerMaster
     public class PasswordCrackerMasterService : IPasswordCrackerMasterService
     {
 
-        public List<string> GetWords()
+        public IEnumerable<string> GetWords()
         {
             List<string> words = new List<string>();
 
-            using (FileStream fs = new FileStream("webster-dictonary-reduced.txt", FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new FileStream("C:/webster-dictionary-reduced.txt", FileMode.Open, FileAccess.Read))
             {
                 using (StreamReader dictionary = new StreamReader(fs))
                 {
@@ -29,7 +29,7 @@ namespace PasswordCrackerMaster
                 }
             }
 
-            return words;
+            return words.Take(100);
         }
 
         public void SendResult(List<Result> results)

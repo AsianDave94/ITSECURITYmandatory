@@ -10,20 +10,31 @@ namespace PasswordCrackerSlave
 {
     class Program
     {
-        private readonly HashAlgorithm _messageDigest = new SHA1CryptoServiceProvider();
+        static readonly HashAlgorithm _messageDigest = new SHA1CryptoServiceProvider();
         static void Main(string[] args)
         {
-            var endpointName = "BasicHttpBinding_IPasswordCrackerMasterService";
-            var endpointAddress = args.FirstOrDefault();
-            if (string.IsNullOrEmpty(endpointAddress))
+            //var endpointName = "BasicHttpBinding_IPasswordCrackerMasterService";
+            //var endpointAddress = args.FirstOrDefault();
+            //if (string.IsNullOrEmpty(endpointAddress))
+            //{
+            //    Console.WriteLine("Must provide endpoint address command line argument");
+            //    return;
+            //}
+            //var client = new PasswordCrackerMasterServiceClient(endpointName, endpointAddress);
+            var client = new PasswordCrackerMasterServiceClient();
+            var words = client.GetWords();
+            foreach (var word in words)
             {
-                Console.WriteLine("Must provide endpoint address command line argument");
-                return;
+               IEnumerable<Result> results = CheckWordWithVariations(word);
+                foreach (var result in results)
+                {
+                    Console.WriteLine(result.Password);
+                    Console.WriteLine(result.Hash);
+                }
             }
-            var client = new PasswordCrackerMasterServiceClient(endpointName, endpointAddress);
         }
 
-        private IEnumerable<Result> CheckWordWithVariations(String dictionaryEntry)
+        static IEnumerable<Result> CheckWordWithVariations(String dictionaryEntry)
         {
             List<Result> result = new List<Result>(); //might be empty
 
@@ -69,7 +80,7 @@ namespace PasswordCrackerSlave
 
             return result;
         }
-        private Result CheckSingleWord(String possiblePassword)
+        static Result CheckSingleWord(String possiblePassword)
         {
             Result result = new Result();
             result.Password = possiblePassword;
