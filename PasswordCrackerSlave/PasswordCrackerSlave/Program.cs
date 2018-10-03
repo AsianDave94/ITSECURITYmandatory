@@ -21,40 +21,40 @@ namespace PasswordCrackerSlave
                 return;
             }
             var client = new PasswordCrackerMasterServiceClient(endpointName, endpointAddress);
-            Console.WriteLine($"Response from master: {client.Foo()}");
         }
+
         private IEnumerable<Result> CheckWordWithVariations(String dictionaryEntry)
         {
             List<Result> result = new List<Result>(); //might be empty
 
             String possiblePassword = dictionaryEntry;
-            IEnumerable<Result> partialResult = CheckSingleWord(userInfos, possiblePassword);
-            result.AddRange(partialResult);
+            Result partialResult = CheckSingleWord(possiblePassword);
+            result.Add(partialResult);
 
             String possiblePasswordUpperCase = dictionaryEntry.ToUpper();
-            IEnumerable<UserInfoClearText> partialResultUpperCase = CheckSingleWord(userInfos, possiblePasswordUpperCase);
-            result.AddRange(partialResultUpperCase);
+            Result partialResultUpperCase = CheckSingleWord(possiblePasswordUpperCase);
+            result.Add(partialResultUpperCase);
 
             String possiblePasswordCapitalized = StringUtilities.Capitalize(dictionaryEntry);
-            IEnumerable<UserInfoClearText> partialResultCapitalized = CheckSingleWord(userInfos, possiblePasswordCapitalized);
-            result.AddRange(partialResultCapitalized);
+            Result partialResultCapitalized = CheckSingleWord(possiblePasswordCapitalized);
+            result.Add(partialResultCapitalized);
 
             String possiblePasswordReverse = StringUtilities.Reverse(dictionaryEntry);
-            IEnumerable<UserInfoClearText> partialResultReverse = CheckSingleWord(userInfos, possiblePasswordReverse);
-            result.AddRange(partialResultReverse);
+            Result partialResultReverse = CheckSingleWord(possiblePasswordReverse);
+            result.Add(partialResultReverse);
 
             for (int i = 0; i < 100; i++)
             {
                 String possiblePasswordEndDigit = dictionaryEntry + i;
-                IEnumerable<UserInfoClearText> partialResultEndDigit = CheckSingleWord(userInfos, possiblePasswordEndDigit);
-                result.AddRange(partialResultEndDigit);
+                Result partialResultEndDigit = CheckSingleWord(possiblePasswordEndDigit);
+                result.Add(partialResultEndDigit);
             }
 
             for (int i = 0; i < 100; i++)
             {
                 String possiblePasswordStartDigit = i + dictionaryEntry;
-                IEnumerable<UserInfoClearText> partialResultStartDigit = CheckSingleWord(userInfos, possiblePasswordStartDigit);
-                result.AddRange(partialResultStartDigit);
+                Result partialResultStartDigit = CheckSingleWord(possiblePasswordStartDigit);
+                result.Add(partialResultStartDigit);
             }
 
             for (int i = 0; i < 10; i++)
@@ -62,8 +62,8 @@ namespace PasswordCrackerSlave
                 for (int j = 0; j < 10; j++)
                 {
                     String possiblePasswordStartEndDigit = i + dictionaryEntry + j;
-                    IEnumerable<UserInfoClearText> partialResultStartEndDigit = CheckSingleWord(userInfos, possiblePasswordStartEndDigit);
-                    result.AddRange(partialResultStartEndDigit);
+                    Result partialResultStartEndDigit = CheckSingleWord(possiblePasswordStartEndDigit);
+                    result.Add(partialResultStartEndDigit);
                 }
             }
 
@@ -75,7 +75,7 @@ namespace PasswordCrackerSlave
             result.Password = possiblePassword;
 
             char[] charArray = possiblePassword.ToCharArray();
-            byte[] passwordAsBytes = Array.ConvertAll(charArray, PasswordFileHandler.GetConverter());
+            byte[] passwordAsBytes = Array.ConvertAll(charArray, ch => Convert.ToByte(ch));
 
             byte[] encryptedPassword = _messageDigest.ComputeHash(passwordAsBytes);
             string encryptedPasswordBase64 = System.Convert.ToBase64String(encryptedPassword);
