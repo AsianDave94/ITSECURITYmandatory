@@ -9,17 +9,86 @@
 //------------------------------------------------------------------------------
 
 namespace PasswordCrackerSlave.MasterServiceReference {
+    using System.Runtime.Serialization;
+    using System;
     
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Result", Namespace="http://schemas.datacontract.org/2004/07/PasswordCrackerMaster")]
+    [System.SerializableAttribute()]
+    public partial class Result : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string HashField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string PasswordField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Hash {
+            get {
+                return this.HashField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.HashField, value) != true)) {
+                    this.HashField = value;
+                    this.RaisePropertyChanged("Hash");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Password {
+            get {
+                return this.PasswordField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.PasswordField, value) != true)) {
+                    this.PasswordField = value;
+                    this.RaisePropertyChanged("Password");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="MasterServiceReference.IPasswordCrackerMasterService")]
     public interface IPasswordCrackerMasterService {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPasswordCrackerMasterService/Foo", ReplyAction="http://tempuri.org/IPasswordCrackerMasterService/FooResponse")]
-        string Foo();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPasswordCrackerMasterService/GetWords", ReplyAction="http://tempuri.org/IPasswordCrackerMasterService/GetWordsResponse")]
+        string[] GetWords();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPasswordCrackerMasterService/Foo", ReplyAction="http://tempuri.org/IPasswordCrackerMasterService/FooResponse")]
-        System.Threading.Tasks.Task<string> FooAsync();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPasswordCrackerMasterService/GetWords", ReplyAction="http://tempuri.org/IPasswordCrackerMasterService/GetWordsResponse")]
+        System.Threading.Tasks.Task<string[]> GetWordsAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPasswordCrackerMasterService/SendResult", ReplyAction="http://tempuri.org/IPasswordCrackerMasterService/SendResultResponse")]
+        void SendResult(PasswordCrackerSlave.MasterServiceReference.Result[] results);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IPasswordCrackerMasterService/SendResult", ReplyAction="http://tempuri.org/IPasswordCrackerMasterService/SendResultResponse")]
+        System.Threading.Tasks.Task SendResultAsync(PasswordCrackerSlave.MasterServiceReference.Result[] results);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -49,12 +118,20 @@ namespace PasswordCrackerSlave.MasterServiceReference {
                 base(binding, remoteAddress) {
         }
         
-        public string Foo() {
-            return base.Channel.Foo();
+        public string[] GetWords() {
+            return base.Channel.GetWords();
         }
         
-        public System.Threading.Tasks.Task<string> FooAsync() {
-            return base.Channel.FooAsync();
+        public System.Threading.Tasks.Task<string[]> GetWordsAsync() {
+            return base.Channel.GetWordsAsync();
+        }
+        
+        public void SendResult(PasswordCrackerSlave.MasterServiceReference.Result[] results) {
+            base.Channel.SendResult(results);
+        }
+        
+        public System.Threading.Tasks.Task SendResultAsync(PasswordCrackerSlave.MasterServiceReference.Result[] results) {
+            return base.Channel.SendResultAsync(results);
         }
     }
 }

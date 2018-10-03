@@ -15,7 +15,7 @@ namespace PasswordCrackerMaster
         List<string> GetWords();
 
         [OperationContract]
-        void SendResult(List<Result>);
+        void SendResult(List<Result>results);
 
         
 

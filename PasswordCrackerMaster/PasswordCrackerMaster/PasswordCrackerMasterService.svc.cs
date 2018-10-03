@@ -10,9 +10,15 @@ namespace PasswordCrackerMaster
 {
     public class PasswordCrackerMasterService : IPasswordCrackerMasterService
     {
-        public string Foo()
+
+        public List<string> GetWords()
         {
-            return "test service";
+            throw new NotImplementedException();
+        }
+
+        public void SendResult(List<Result> results)
+        {
+            throw new NotImplementedException();
         }
     }
 }
