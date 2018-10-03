@@ -25,12 +25,13 @@ namespace PasswordCrackerSlave
             var words = client.GetWords();
             foreach (var word in words)
             {
-               IEnumerable<Result> results = CheckWordWithVariations(word);
+                IEnumerable<Result> results = CheckWordWithVariations(word);
                 foreach (var result in results)
                 {
                     Console.WriteLine(result.Password);
                     Console.WriteLine(result.Hash);
                 }
+                client.SendResult(results.ToArray());
             }
         }
 

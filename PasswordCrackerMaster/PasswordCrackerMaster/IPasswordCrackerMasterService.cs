@@ -15,9 +15,10 @@ namespace PasswordCrackerMaster
         IEnumerable<string> GetWords();
 
         [OperationContract]
-        void SendResult(List<Result>results);
+        void SendResult(List<Result> results);
 
-        
 
+        [OperationContract]
+        IEnumerable<string> GetMatches();
     }
 }
