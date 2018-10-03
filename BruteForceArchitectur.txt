@@ -1,0 +1,23 @@
+"The experiment must include time metrics, and at least one other metric."
+
+The question:
+"Hvilken Brute Force arkitektur kan vi crack flest mulige passwords, på hurtigst tid" 
+"Hvor stor en mængde data skal der til før den distribueret løsning bliver hurtigere end den centrale løsning" 
+
+
+The Hypothesis:
+"En skalerbar MASTER/SLAVE arkitektur med optimeret delegering af arbejde ville kunne lave arbejdet hurtigere end et program uden, på større mængde data"
+
+- Hvis et program uden MASTER/SLAVE arkitektur er hurtigere end et program med MASTER/SLAVE arkitektur, vil experimentet FEJLE.
+-- Vice Versa vil experimentet være en SUCCESS. 
+
+- Hvis den centraliceret løsning altid er hurtigere end den distribuerede løsning, vil experimentet FEJLE.
+-- Hvis den distribuerede løsning er hurtigere end den centraliceret løsning efter en bestemt mængde data, vil experimentet være end SUCCESS
+
+Experiment:
+"2 programmer der har den samme udførsel skal crack samme koder, en med MASTER/SLAVE, en uden."
+- "Den der løser alle koder først, er hurtigst"
+
+
+___________________________________________________________________________________
+
