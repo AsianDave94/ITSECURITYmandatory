@@ -22,16 +22,21 @@ namespace PasswordCrackerSlave
             //}
             //var client = new PasswordCrackerMasterServiceClient(endpointName, endpointAddress);
             var client = new PasswordCrackerMasterServiceClient();
-            var words = client.GetWords();
-            foreach (var word in words)
+            while (true)
             {
-                IEnumerable<Result> results = CheckWordWithVariations(word);
-                foreach (var result in results)
+                Console.WriteLine("Getting words.");
+                var words = client.GetWords();
+                Console.WriteLine("Got words");
+                foreach (var word in words)
                 {
-                    Console.WriteLine(result.Password);
-                    Console.WriteLine(result.Hash);
+                    IEnumerable<Result> results = CheckWordWithVariations(word);
+                    foreach (var result in results)
+                    {
+                        Console.WriteLine(result.Password);
+                        Console.WriteLine(result.Hash);
+                    }
+                    client.SendResultAsync(results.ToArray());
                 }
-                client.SendResult(results.ToArray());
             }
         }
 
