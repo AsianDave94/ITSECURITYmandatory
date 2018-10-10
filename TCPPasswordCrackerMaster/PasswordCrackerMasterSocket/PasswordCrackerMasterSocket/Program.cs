@@ -108,8 +108,8 @@ namespace PasswordCrackerMasterSocket
         {
             lock (wordsLock)
             {
-                var hundred = words.Take(100);
-                words = words.Skip(100).ToList();
+                var hundred = words.Take(1000);
+                words = words.Skip(1000).ToList();
                 return hundred;
             }
         }

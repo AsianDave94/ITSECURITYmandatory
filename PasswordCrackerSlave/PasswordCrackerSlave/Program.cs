@@ -10,9 +10,33 @@ namespace PasswordCrackerSlave
 {
     class Program
     {
+        static Dictionary<string, string> hashToUser = new Dictionary<string, string>();
         static readonly HashAlgorithm _messageDigest = new SHA1CryptoServiceProvider();
         static async Task Main(string[] args)
         {
+            List<string> passwordFile = new List<string>(new string[] {
+                "anders:5en6G6MezRroT3XKqkdPOmY/BfQ=",
+                "peter:qmz4syDsnnyBP+NQeqczRv/kJP4=",
+                "michael:rIFGj9xqLUA0T0J8xiGCuMlfnvM=",
+                "vibeke:EQ91A67FOpjss4uW8kV570lnSa0=",
+                "lars:cupd+wYwjxfNBtLY4oc9WWhVDZU=",
+                "poul:94roVc1d8UZEtbK9LBF3vuo0wkg=",
+                "susanne:qVs4ZslBdqp0Xp2jcyt4RIpP5+8=",
+                "per:AXPaVO/3DmqNsW2uPJw9ZJxf9lc=",
+                "ebbe:vE8YzmcA85cX1cTVa89XN1TwPhw=",
+                "steen:8Ssn+7nvQr6yRLdKLLHBJIX5ck0=",
+                "mohammed:e5E3g74Ju2HGGnhzMCZ55DmzFgc=",
+                "mogens:O6BE8Nyx/TWEI6VuCyHsI71zxV0=",
+            });
+
+            foreach (var line in passwordFile)
+            {
+                var parts = line.Split(':');
+                var username = parts[0];
+                var hash = parts[1];
+                hashToUser[hash] = username;
+            }
+
             var client = new SocketClient();
             var ip = IPAddress.Parse("127.0.0.1");
             try
@@ -30,14 +54,9 @@ namespace PasswordCrackerSlave
 
                     foreach (var word in words)
                     {
-
                         Console.WriteLine(word);
                         IEnumerable<Result> results = CheckWordWithVariations(word);
-                        //foreach (var result in results)
-                        //{
-                        //    Console.WriteLine(result.Password);
-                        //    Console.WriteLine(result.Hash);
-                        //}
+                        results = results.Where(result => hashToUser.TryGetValue(result.Hash, out string username));
                         Console.WriteLine("Sending results");
                         await client.SendResultAsync(results);
                         Console.WriteLine("Sent results");
