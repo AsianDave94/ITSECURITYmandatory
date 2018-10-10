@@ -9,6 +9,7 @@ namespace PasswordCrackerMasterSocket
     class Command
     {
         public string cmd { get; set; }
+
         
     }
 }

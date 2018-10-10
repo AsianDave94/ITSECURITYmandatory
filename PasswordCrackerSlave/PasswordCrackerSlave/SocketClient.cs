@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -23,9 +25,13 @@ namespace PasswordCrackerSlave
 
         public async Task<List<string>> GetWordsAsync()
         {
-           
-            
-        }
+            var sr = new StreamReader(client.GetStream());
+            var sw = new StreamWriter(client.GetStream());
+            sw.AutoFlush = true;
+            await sw.WriteAsync("{\"cmd\":\"get words\"}");
+            var line = await sr.ReadLineAsync();
+            return JsonConvert.DeserializeObject<List<string>>(line);
+        } 
 
         public async Task SendResultAsync(List<string> results)
         {
