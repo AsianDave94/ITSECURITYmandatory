@@ -11,8 +11,27 @@ namespace PasswordCrackerMasterSocket
 {
     class Program
     {
+
+        static List<string> words;
+
         static void Main(string[] args)
         {
+
+            words = new List<string>();
+
+            using (FileStream fs = new FileStream("C:/webster-dictionary-reduced.txt", FileMode.Open, FileAccess.Read))
+            {
+                using (StreamReader dictionary = new StreamReader(fs))
+                {
+                    while (!dictionary.EndOfStream)
+                    {
+                        string entry = dictionary.ReadLine();
+
+                        words.Add(entry);
+                    }
+                }
+            }
+
 
 
             IPAddress ip = IPAddress.Parse("0.0.0.0");
@@ -20,28 +39,33 @@ namespace PasswordCrackerMasterSocket
 
 
             CS.Start();
+
             var client = CS.AcceptTcpClient();
 
             var stream = client.GetStream();
+
             var reader = new StreamReader(stream);
+
+            var writer = new StreamWriter(stream);
 
             var line = reader.ReadLine();
 
             var cmd = JsonConvert.DeserializeObject<Command>(line);
 
-           
-            string SendWords()
+            if (cmd.cmd == "get words")
             {
-
-
-                return "puha";
+                var response = JsonConvert.SerializeObject(GetWords());
+                writer.WriteLine(response);
+                writer.Flush();
             }
-
-            string GetWords()
-            {
-                return "puha";
-            }
-        
+            client.Close();
         }
+        static public IEnumerable<string> GetWords()
+        {
+            var hundred = words.Take(100);
+            words = words.Skip(100).ToList();
+            return hundred;
+        }
+
     }
 }
