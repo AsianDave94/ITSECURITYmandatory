@@ -35,30 +35,33 @@ namespace PasswordCrackerMasterSocket
 
 
             IPAddress ip = IPAddress.Parse("0.0.0.0");
-            TcpListener CS = new TcpListener(ip,6789);
+            TcpListener CS = new TcpListener(ip, 6789);
 
 
             CS.Start();
 
-            var client = CS.AcceptTcpClient();
-
-            var stream = client.GetStream();
-
-            var reader = new StreamReader(stream);
-
-            var writer = new StreamWriter(stream);
-
-            var line = reader.ReadLine();
-
-            var cmd = JsonConvert.DeserializeObject<Command>(line);
-
-            if (cmd.cmd == "get words")
+            while (true)
             {
-                var response = JsonConvert.SerializeObject(GetWords());
-                writer.WriteLine(response);
-                writer.Flush();
+                var client = CS.AcceptTcpClient();
+
+                var stream = client.GetStream();
+
+                var reader = new StreamReader(stream);
+
+                var writer = new StreamWriter(stream);
+
+                var line = reader.ReadLine();
+
+                var cmd = JsonConvert.DeserializeObject<Command>(line);
+
+                if (cmd.cmd == "get words")
+                {
+                    var response = JsonConvert.SerializeObject(GetWords());
+                    writer.WriteLine(response);
+                    writer.Flush();
+                }
+                client.Close();
             }
-            client.Close();
         }
         static public IEnumerable<string> GetWords()
         {
