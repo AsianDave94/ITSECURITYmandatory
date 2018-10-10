@@ -12,10 +12,34 @@ namespace PasswordCrackerMasterSocket
     class Program
     {
 
+        static Dictionary<string, string> hashToUser = new Dictionary<string, string>();
         static List<string> words;
+        static object wordsLock = new object();
 
         static void Main(string[] args)
         {
+            List<string> passwordFile = new List<string>(new string[] {
+                "anders:5en6G6MezRroT3XKqkdPOmY/BfQ=",
+                "peter:qmz4syDsnnyBP+NQeqczRv/kJP4=",
+                "michael:rIFGj9xqLUA0T0J8xiGCuMlfnvM=",
+                "vibeke:EQ91A67FOpjss4uW8kV570lnSa0=",
+                "lars:cupd+wYwjxfNBtLY4oc9WWhVDZU=",
+                "poul:94roVc1d8UZEtbK9LBF3vuo0wkg=",
+                "susanne:qVs4ZslBdqp0Xp2jcyt4RIpP5+8=",
+                "per:AXPaVO/3DmqNsW2uPJw9ZJxf9lc=",
+                "ebbe:vE8YzmcA85cX1cTVa89XN1TwPhw=",
+                "steen:8Ssn+7nvQr6yRLdKLLHBJIX5ck0=",
+                "mohammed:e5E3g74Ju2HGGnhzMCZ55DmzFgc=",
+                "mogens:O6BE8Nyx/TWEI6VuCyHsI71zxV0=",
+            });
+
+            foreach (var line in passwordFile)
+            {
+                var parts = line.Split(':');
+                var username = parts[0];
+                var hash = parts[1];
+                hashToUser[hash] = username;
+            }
 
             words = new List<string>();
 
@@ -67,10 +91,13 @@ namespace PasswordCrackerMasterSocket
                     else if (cmd.cmd == "send results")
                     {
                         var results = JsonConvert.DeserializeObject<List<Result>>(cmd.data);
-                        Console.WriteLine("Results: {0}", results.Count);
                         foreach (var result in results)
                         {
-                            Console.WriteLine("Password: {0} - Hash: {1}", result.Password, result.Hash);
+                            var ok = hashToUser.TryGetValue(result.Hash, out string username);
+                            if (ok)
+                            {
+                                Console.WriteLine($"Match found: username={username}, password={result.Password}, hash={result.Hash}");
+                            }
                         }
                     }
                 }
@@ -79,9 +106,12 @@ namespace PasswordCrackerMasterSocket
 
         static public IEnumerable<string> GetWords()
         {
-            var hundred = words.Take(100);
-            words = words.Skip(100).ToList();
-            return hundred;
+            lock (wordsLock)
+            {
+                var hundred = words.Take(100);
+                words = words.Skip(100).ToList();
+                return hundred;
+            }
         }
 
     }

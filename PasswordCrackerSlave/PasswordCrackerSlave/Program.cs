@@ -23,6 +23,10 @@ namespace PasswordCrackerSlave
                     Console.WriteLine("Getting words.");
                     var words = await client.GetWordsAsync();
                     Console.WriteLine("Got {0} words", words.Count());
+                    if (words.Count() == 0)
+                    {
+                        break;
+                    }
 
                     foreach (var word in words)
                     {
