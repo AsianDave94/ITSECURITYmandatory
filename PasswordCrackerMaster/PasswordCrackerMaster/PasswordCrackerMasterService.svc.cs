@@ -26,9 +26,11 @@ namespace PasswordCrackerMaster
 "mogens:O6BE8Nyx/TWEI6VuCyHsI71zxV0=",
 });
 
-        public IEnumerable<string> GetWords()
+        static List<string> words;
+
+        static PasswordCrackerMasterService()
         {
-            List<string> words = new List<string>();
+            words = new List<string>();
 
             using (FileStream fs = new FileStream("C:/webster-dictionary-reduced.txt", FileMode.Open, FileAccess.Read))
             {
@@ -42,8 +44,13 @@ namespace PasswordCrackerMaster
                     }
                 }
             }
+        }
 
-            return words.Take(100);
+        public IEnumerable<string> GetWords()
+        {
+            var hundred = words.Take(100);
+            words = words.Skip(100).ToList();
+            return hundred;
         }
 
 
