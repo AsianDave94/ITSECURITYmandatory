@@ -43,7 +43,7 @@ namespace PasswordCrackerMasterSocket
 
             words = new List<string>();
 
-            using (FileStream fs = new FileStream("C:/webster-dictionary-reduced.txt", FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new FileStream("C:/webster-dictionary.txt", FileMode.Open, FileAccess.Read))
             {
                 using (StreamReader dictionary = new StreamReader(fs))
                 {
@@ -108,8 +108,8 @@ namespace PasswordCrackerMasterSocket
         {
             lock (wordsLock)
             {
-                var hundred = words.Take(1000);
-                words = words.Skip(1000).ToList();
+                var hundred = words.Take(500);
+                words = words.Skip(500).ToList();
                 return hundred;
             }
         }
