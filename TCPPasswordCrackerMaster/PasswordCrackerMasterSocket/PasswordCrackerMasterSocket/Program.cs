@@ -14,9 +14,10 @@ namespace PasswordCrackerMasterSocket
 
         static Dictionary<string, string> hashToUser = new Dictionary<string, string>();
         static List<string> words;
+        static int wordsIndex = 0;
         static object wordsLock = new object();
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             List<string> passwordFile = new List<string>(new string[] {
                 "anders:5en6G6MezRroT3XKqkdPOmY/BfQ=",
@@ -65,13 +66,14 @@ namespace PasswordCrackerMasterSocket
 
             while (true)
             {
-                _ = HandleClientAsync(CS);
+                var client = await CS.AcceptTcpClientAsync();
+                _ = HandleClientAsync(client);
             }
         }
 
-        private static async Task HandleClientAsync(TcpListener CS)
+        private static async Task HandleClientAsync(TcpClient client)
         {
-            using (var client = await CS.AcceptTcpClientAsync())
+            try
             {
                 var stream = client.GetStream();
                 var reader = new StreamReader(stream);
@@ -102,15 +104,19 @@ namespace PasswordCrackerMasterSocket
                     }
                 }
             }
+            finally
+            {
+                client.Close();
+            }
         }
 
         static public IEnumerable<string> GetWords()
         {
             lock (wordsLock)
             {
-                var hundred = words.Take(500);
-                words = words.Skip(500).ToList();
-                return hundred;
+                var slice = words.GetRange(wordsIndex, 10000);
+                wordsIndex += 10000;
+                return slice;
             }
         }
 

@@ -52,15 +52,14 @@ namespace PasswordCrackerSlave
                         break;
                     }
 
+                    var combined = new List<Result>();
                     foreach (var word in words)
                     {
-                        Console.WriteLine(word);
                         IEnumerable<Result> results = CheckWordWithVariations(word);
                         results = results.Where(result => hashToUser.TryGetValue(result.Hash, out string username));
-                        Console.WriteLine("Sending results");
-                        await client.SendResultAsync(results);
-                        Console.WriteLine("Sent results");
+                        combined.AddRange(results);
                     }
+                    await client.SendResultAsync(combined);
                 }
             }
             finally

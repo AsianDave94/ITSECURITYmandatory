@@ -34,6 +34,10 @@ namespace PasswordCrackerSlave
             ;
             await sw.WriteLineAsync(JsonConvert.SerializeObject(command));
             var line = await sr.ReadLineAsync();
+            if (line == null)
+            {
+                return new List<string>();
+            }
             return JsonConvert.DeserializeObject<List<string>>(line);
         }
 
