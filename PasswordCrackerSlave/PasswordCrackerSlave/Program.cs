@@ -13,15 +13,8 @@ namespace PasswordCrackerSlave
         static readonly HashAlgorithm _messageDigest = new SHA1CryptoServiceProvider();
         static void Main(string[] args)
         {
-            //var endpointName = "BasicHttpBinding_IPasswordCrackerMasterService";
-            //var endpointAddress = args.FirstOrDefault();
-            //if (string.IsNullOrEmpty(endpointAddress))
-            //{
-            //    Console.WriteLine("Must provide endpoint address command line argument");
-            //    return;
-            //}
-            //var client = new PasswordCrackerMasterServiceClient(endpointName, endpointAddress);
-            var client = new PasswordCrackerMasterServiceClient();
+            
+            
             while (true)
             {
                 Console.WriteLine("Getting words.");
