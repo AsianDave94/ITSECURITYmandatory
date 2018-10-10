@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace PasswordCrackerMasterSocket
 {
-    class Command
+    class Result
     {
-        public string cmd { get; set; }
-
-        public string data { get; set; }
+        public string Password { get; set; }
+        public string Hash { get; set; }
     }
 }

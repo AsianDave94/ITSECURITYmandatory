@@ -5,7 +5,6 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using PasswordCrackerSlave.MasterServiceReference;
 
 namespace PasswordCrackerSlave
 {
@@ -16,25 +15,34 @@ namespace PasswordCrackerSlave
         {
             var client = new SocketClient();
             var ip = IPAddress.Parse("127.0.0.1");
-            await client.ConnectAsync(ip, 6789);
-            
-            while (true)
+            try
             {
-                Console.WriteLine("Getting words.");
-                var words = await client.GetWordsAsync();
-                Console.WriteLine("Got words");
-                foreach (var word in words)
+                await client.ConnectAsync(ip, 6789);
+                while (true)
                 {
+                    Console.WriteLine("Getting words.");
+                    var words = await client.GetWordsAsync();
+                    Console.WriteLine("Got {0} words", words.Count());
 
-                    Console.WriteLine(word);
-                    //IEnumerable<Result> results = CheckWordWithVariations(word);
-                    //foreach (var result in results)
-                    //{
-                    //    Console.WriteLine(result.Password);
-                    //    Console.WriteLine(result.Hash);
-                    //}
-                    //client.SendResultAsync(results.ToArray());
+                    foreach (var word in words)
+                    {
+
+                        Console.WriteLine(word);
+                        IEnumerable<Result> results = CheckWordWithVariations(word);
+                        //foreach (var result in results)
+                        //{
+                        //    Console.WriteLine(result.Password);
+                        //    Console.WriteLine(result.Hash);
+                        //}
+                        Console.WriteLine("Sending results");
+                        await client.SendResultAsync(results);
+                        Console.WriteLine("Sent results");
+                    }
                 }
+            }
+            finally
+            {
+                client.Close();
             }
         }
 

@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PasswordCrackerMasterSocket
+namespace PasswordCrackerSlave
 {
     class Command
     {
         public string cmd { get; set; }
-
         public string data { get; set; }
     }
 }

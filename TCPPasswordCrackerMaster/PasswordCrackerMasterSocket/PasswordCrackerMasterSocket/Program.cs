@@ -53,14 +53,26 @@ namespace PasswordCrackerMasterSocket
                 var reader = new StreamReader(stream);
                 var writer = new StreamWriter(stream);
 
-                var line = await reader.ReadLineAsync();
-                var cmd = JsonConvert.DeserializeObject<Command>(line);
-
-                if (cmd.cmd == "get words")
+                while (true)
                 {
-                    var response = JsonConvert.SerializeObject(GetWords());
-                    await writer.WriteLineAsync(response);
-                    await writer.FlushAsync();
+                    var line = await reader.ReadLineAsync();
+                    var cmd = JsonConvert.DeserializeObject<Command>(line);
+
+                    if (cmd.cmd == "get words")
+                    {
+                        var response = JsonConvert.SerializeObject(GetWords());
+                        await writer.WriteLineAsync(response);
+                        await writer.FlushAsync();
+                    }
+                    else if (cmd.cmd == "send results")
+                    {
+                        var results = JsonConvert.DeserializeObject<List<Result>>(cmd.data);
+                        Console.WriteLine("Results: {0}", results.Count);
+                        foreach (var result in results)
+                        {
+                            Console.WriteLine("Password: {0} - Hash: {1}", result.Password, result.Hash);
+                        }
+                    }
                 }
             }
         }
